@@ -1,0 +1,12 @@
+<script type="text/javascript" src="client.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="adapter.js"></script>
+<script src="processing.js"></script>
+<script type="text/javascript">
+(function() {
+	PVector.prototype.copy = function() {
+		return new PVector(this.x,this.y,this.z);
+	};
+})();
+</script>
+<canvas id="SimpleGo" data-processing-sources="Movable.pde SimpleGo.pde AbstractAgent.pde AbstractArena.pde AbstractCell.pde Agent.pde Arena.pde Controller.pde Destroyable.pde Dummy.pde LIfeCircle.pde Setting.pde Utility.pde NetFlat.pde"></canvas>

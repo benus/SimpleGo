@@ -34,7 +34,7 @@ public class NetFlat {
   }
   
   public void setLatency(String peerId,int latency) {
-    latencyMap.put(peerId,latency);
+    latencyMap.put(peerId,latency/2);
     //println("latency:" + peerId + ": " + latency);
   }
   

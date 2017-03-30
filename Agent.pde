@@ -5,6 +5,8 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
   boolean moving;
   int instruction = Movable.MOVEMENT_STAY;
   int stepsForMoving;//there are many steps for the moving
+  long startTimeInStep;
+  int elapsedTimeOneStep;
   int latency;
   
   int type = Movable.TYPE_AUTO;
@@ -216,6 +218,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     previousCell = this.cell;
     super.move(instruction);
     moving = true;
+    startTimeInStep = millis();
   }
   
   float getPerlinNoise() {
@@ -244,25 +247,32 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
   
   public void draw() {
     fill(AGENT_STATUS_COLORS[this.status]);
-    if(moving) {
-      stepsForMoving++;
+    if(moving) {//println(name + " latency: " + latency);
+      elapsedTimeOneStep = int(millis() - startTimeInStep);
+      //stepsForMoving++;
       PVector fromV = arena.getPositionInViewport(previousCell.position);
       PVector toV = arena.getPositionInViewport(this.cell.position);
       
       PVector moveV = PVector.sub(toV,fromV);
-      moveV.mult(((float)stepsForMoving) / MOVE_SPEED);
+      
+      float speedRatio = ((float)elapsedTimeOneStep) / (MILLIS_FOR_MOVE_SPEED - latency);
+      if(MILLIS_FOR_MOVE_SPEED <= latency) {
+        elapsedTimeOneStep = MILLIS_FOR_MOVE_SPEED - latency;
+        speedRatio = 1;
+      }
+      moveV.mult(speedRatio);
       
       PVector movingPos = PVector.add(fromV,moveV);
   
       //println(toV.x,toV.y);
       ellipse(movingPos.x,movingPos.y,size,size);
       //println(name + " moving from " + fromV + " to " + toV + " at " + movingPos + " by " + frameInMovement);
-      if(stepsForMoving == MOVE_SPEED) {// 0 means the movement is completed
-          stepsForMoving = 0;
+      if(elapsedTimeOneStep >= (MILLIS_FOR_MOVE_SPEED - latency)) {// 0 means the movement is completed
+          //stepsForMoving = 0;
           moving = false;    println("moved: " + cell.index);
       }
     }
-    else {
+    else {//println(name + " staying");
       PVector posV = arena.getPositionInViewport(this.cell.position);
       ellipse(posV.x,posV.y,size,size);
     }

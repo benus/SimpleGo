@@ -1,6 +1,7 @@
 public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle {
   
-  Arena.Cell previousCell; 
+  Arena.Cell previousCell;
+  Node home;
   int size;
   boolean moving;
   int instruction = Movable.MOVEMENT_STAY;

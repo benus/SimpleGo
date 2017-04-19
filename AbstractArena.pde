@@ -18,9 +18,13 @@ public class AbstractArena<A extends AbstractAgent,C extends AbstractCell> {
   }
 	
 	public void addAgent(A agent) {
-		agents.add(agent);
-		enterCell(agent,getRandomBlankCell());
+    addAgent(agent,getRandomBlankCell());
 	}
+
+  public void addAgent(A agent,C cell) {
+    agents.add(agent);
+    enterCell(agent,cell);
+  }
 	
 	public void removeAgent(A agent) {
 		agent.destroy();

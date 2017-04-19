@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-Arena arena;
+Matrix matrix;
 List<Agent> agents;
 boolean isPaused;
 Controller controller = new Controller(new PVector(),0,0);
@@ -15,19 +15,19 @@ void setup() {
   
   net.init();
     
-  arena = new Arena(ARENA_SIZE);
+  matrix = new Matrix();
   for(int i=0;i<AUTO_AGENT_NUM;i++) {
-    Agent agent= new Agent(arena,"Agent_" + i + "_" + net.getPeerId());
-    arena.addAgent(agent);
+    Agent agent= new Agent(matrix.arena,"Agent_" + i + "_" + net.getPeerId());
+    matrix.addAgent(agent);
   }
-  Dummy dummy = new Dummy(arena,"Dummy_" + net.getPeerId());
+  Dummy dummy = new Dummy(matrix.arena,"Dummy_" + net.getPeerId());
   dummy.setController(controller);
   dummy.status = LifeCircle.STATUS_INFECTED;//for test
-  arena.addAgent(dummy);
+  matrix.addAgent(dummy);
   //dummy.cell = arena.cells[3][3];//for test
-  arena.initViewport(dummy.cell.position);
+  matrix.arena.initViewport(dummy.cell.position);
   
-  agents = arena.agents;
+  agents = matrix.arena.agents;
   
   net.login(dummy.name);
 }
@@ -60,23 +60,23 @@ void draw() {
   if(!isPaused) {
     background(125);
     //checkInput();
-    arena.draw();
+    matrix.draw();
     agentsWork();
   //moveAgents();
   }
 }
 
 void newRemoteAgent(String agentName) {
-  Agent agent= new Agent(arena,agentName);
+  Agent agent= new Agent(matrix.arena,agentName);
   agent.type = Movable.TYPE_REMOTE;
-  arena.addAgent(agent);
+  matrix.addAgent(agent);
 }
 
 void setSynData(String objectName,NetFlat.SynData data) { 
   net.setSynData(objectName,data);  
 }
 
-void setLatency(String peerId,String timestamp) {
+void setLatency(String peerId,int timestamp) {
   net.setLatency(peerId,timestamp);  
 }
 
@@ -103,7 +103,7 @@ void moveAgents() {
           agent.move(((int)(Math.random()*4)) + 1);
           if(!agent.isContained()) {
             println(agent.name + " is contained at cell (" + agent.cell.index.x + "," + agent.cell.index.y + ")");
-            arena.removeAgent(agent);
+            matrix.arena.removeAgent(agent);
           }
         }
     }

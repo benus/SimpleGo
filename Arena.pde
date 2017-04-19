@@ -174,17 +174,17 @@ public class Arena extends AbstractArena<Agent,Arena.Cell> {
     PVector cellPos;
     //cells = (Cell[][])Array.newInstance(Cell.class,WIDTH,HEIGHT);
     cells = new Cell[WIDTH][HEIGHT];
-    for(int i=0;i<WIDTH;i++) {
+    /*for(int i=0;i<WIDTH;i++) {//@deprciated, cells should be instantiate at the time of the createion of the node
       for(int j=0;j<HEIGHT;j++) {
         cellPos = new PVector(i*cellSize + halfCellSize.x,j*cellSize + halfCellSize.y);
         setCell(i,j,new Cell(new PVector(i,j),cellPos,cellSize));
         //println(cellSize + "," + cellPos);
       }
-    }
+    }*/
   }
   
-  public void addAgent(Agent agent) {
-    super.addAgent(agent);
+  public void addAgent(Agent agent,Cell cell) {
+    super.addAgent(agent,cell);
     agent.previousCell = agent.cell;
   }
   

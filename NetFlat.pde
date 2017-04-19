@@ -13,15 +13,15 @@ public class NetFlat {
   private HashMap<String,Integer> latencyMap = new HashMap<String,Integer>();//peerId,latency
   
   public void init() {
-    NetConnector.init();
+    //NetConnector.init();
   }
   
   public void login(String userName) {
-    NetConnector.login(userName);
+    //NetConnector.login(userName);
   }
   
   public String getPeerId() {
-    return NetConnector.getPeerId();
+    return "";//NetConnector.getPeerId();
   }
   
   public SynData getSynData(String objectName) {
@@ -57,6 +57,6 @@ public class NetFlat {
     data.objectName = agent.name;
     data.movement = instruction;
     data.cellIndex = agent.cell.index;
-    NetConnector.syn(data);
+    //NetConnector.syn(data);
   }
 }

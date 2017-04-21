@@ -16,12 +16,12 @@ public class NetFlat {
     //NetConnector.init();
   }
   
-  public void login(String userName) {
-    //NetConnector.login(userName);
+  public void login(Dummy dummy) {
+    NetConnector.login(dummy.name,dummy.home.centerCell.index);
   }
   
   public String getPeerId() {
-    return "";//NetConnector.getPeerId();
+    return NetConnector.getPeerId();
   }
   
   public SynData getSynData(String objectName) {
@@ -48,7 +48,7 @@ public class NetFlat {
       data.objectName = agent.name;
       data.movement = agent.instruction;
       data.cellIndex = agent.previousCell.index;
-      //NetConnector.syn(data);
+      NetConnector.syn(data);
     }
   }
   
@@ -57,6 +57,6 @@ public class NetFlat {
     data.objectName = agent.name;
     data.movement = instruction;
     data.cellIndex = agent.cell.index;
-    //NetConnector.syn(data);
+    NetConnector.syn(data);
   }
 }

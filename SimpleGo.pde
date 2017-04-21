@@ -15,12 +15,15 @@ void setup() {
   
   net.init();
     
-  matrix = new Matrix();
+  /*matrix = new Matrix();
+  Node node = null;
   for(int i=0;i<AUTO_AGENT_NUM;i++) {
-    Agent agent= new Agent(matrix.arena,"Agent_" + i + "_" + net.getPeerId());
+    node = matrix.newNode();
+    Agent agent= new Agent(matrix.arena,"Agent_" + i + "_" + net.getPeerId(),node);
     matrix.addAgent(agent);
   }
-  Dummy dummy = new Dummy(matrix.arena,"Dummy_" + net.getPeerId());
+  node = matrix.newNode();
+  Dummy dummy = new Dummy(matrix.arena,"Dummy_" + net.getPeerId(),node);
   dummy.setController(controller);
   dummy.status = LifeCircle.STATUS_INFECTED;//for test
   matrix.addAgent(dummy);
@@ -29,7 +32,7 @@ void setup() {
   
   agents = matrix.arena.agents;
   
-  net.login(dummy.name);
+  net.login(dummy);*/
 }
 
 void keyPressed() {
@@ -66,8 +69,8 @@ void draw() {
   }
 }
 
-void newRemoteAgent(String agentName) {
-  Agent agent= new Agent(matrix.arena,agentName);
+void newRemoteAgent(String agentName,PVector homeNodeIndex) {
+  Agent agent= new Agent(matrix.arena,agentName,new Node(matrix,homeNodeIndex));
   agent.type = Movable.TYPE_REMOTE;
   matrix.addAgent(agent);
 }

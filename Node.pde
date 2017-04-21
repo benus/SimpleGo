@@ -24,7 +24,7 @@ public class Node {
     Arena.Cell cell = matrix.arena.cells[int(index.x)][int(index.y)]; //<>//
     if(cell == null) {
       PVector cellPos = new PVector(index.x*matrix.arena.cellSize + matrix.arena.halfCellSize.x,index.y*matrix.arena.cellSize + matrix.arena.halfCellSize.y);
-      cell = matrix.arena.new Cell(new PVector(index.x,index.y),cellPos,matrix.arena.cellSize);
+      cell = matrix.arena.new Cell(new PVector(index.x,index.y),cellPos,matrix.arena.cellSize);//appears it does not supported by processingjs(matrix.arena.new Cell)
       matrix.arena.setCell(int(index.x),int(index.y),cell);
     }
     return cell;

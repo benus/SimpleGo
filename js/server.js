@@ -35,7 +35,7 @@ io.on("connection",function(socket) {
 		var loginedUserNameList = {};
 		for(var peerId in userProfiles) {
 			if(userProfiles[peerId].userName) {
-				loginedUserNameList[peerId] = userProfiles[peerId].userName;
+				loginedUserNameList[peerId] = {userName:userProfiles[peerId].userName,homeIndex:userProfiles[peerId].homeIndex};
 			}
 		}
 		socket.emit("env",{peerIdList:Object.keys(userProfiles),loginedUserNameList:loginedUserNameList});
@@ -60,9 +60,10 @@ io.on("connection",function(socket) {
 	
 	socket.on("login",function(info) {
 		userProfiles[info.peerId].userName = info.userName;
+		userProfiles[info.peerId].homeIndex = info.homeIndex;
 		console.log("User " + info.userName + " login");
 		
-		io.emit('login',{peerId:info.peerId,userName:info.userName});
+		io.emit('login',{peerId:info.peerId,userName:info.userName,homeIndex:info.homeIndex});
 	});
 	
 	socket.on("logout",function(info) {

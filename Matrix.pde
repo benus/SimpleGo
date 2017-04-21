@@ -6,16 +6,9 @@ public class Matrix {
     arena = new Arena(ARENA_SIZE);
   }
   
-  public void addAgent(Agent agent,PVector index) {
-    Node node = new Node(this,index);
-    arena.addAgent(agent,node.centerCell);
-    nodeMap.put(node.centerCell.index,node);
-  }
-  
   public void addAgent(Agent agent) {
-    Node node = spawnNode();
-    arena.addAgent(agent,node.centerCell);
-    nodeMap.put(node.centerCell.index,node);
+    arena.addAgent(agent);
+    nodeMap.put(agent.home.centerCell.index,agent.home);
   }
   
   public void draw() {
@@ -31,16 +24,17 @@ public class Matrix {
     }
   }
   
-  Node spawnNode() {
+  Node newNode() {
     if(nodeMap.isEmpty()) {
-      return spawnRandomNode();
+      return newRandomNode();
     }
     else {
-      return spawnNeighbourNode();
+      return newNeighbourNode();
     }
   }
 
-  Node spawnNeighbourNode() {println("ready to spawn neighbour node");
+  //the neighbour node is added to matrix and return
+  Node newNeighbourNode() {println("ready to spawn neighbour node");
     Iterator<Node> nodes = nodeMap.values().iterator();
     Node node = null;
     PVector neighbourIndex = null;
@@ -54,19 +48,20 @@ public class Matrix {
     
     if(neighbourIndex != null) {
       println("neighbour node in (" + neighbourIndex.x + "," + neighbourIndex.y + ")");
-      //nodeMap.put(neighbourIndex,new Node(this,neighbourIndex));
-      return new Node(this,neighbourIndex);
+      nodeMap.put(neighbourIndex,new Node(this,neighbourIndex));
+      return nodeMap.get(neighbourIndex);
     }
     return null;
   }
   
-  Node spawnRandomNode() {
+  //the random node is added to matrix and return
+  Node newRandomNode() {
     int tryNum = 0;
     boolean again = false;
     PVector index = null;
     do {
-      int x = int((float)Math.random() * DIAGONAL_CELL_NUM-2) + 2;
-      int y = int((float)Math.random() * DIAGONAL_CELL_NUM-2) + 2;
+      int x = int(random(1,DIAGONAL_CELL_NUM-1));
+      int y = int(random(1,DIAGONAL_CELL_NUM-1));
       index = new PVector(x,y);
       if(nodeMap.containsKey(index)) {
         tryNum++;
@@ -78,8 +73,8 @@ public class Matrix {
     }while(again && tryNum < 20);
     if(!again) {
       println("new node in (" + index.x + "," + index.y + ")");
-      //nodeMap.put(index,new Node(this,index));
-      return new Node(this,index);
+      nodeMap.put(index,new Node(this,index));
+      return nodeMap.get(index);
     }
     return null;
   }

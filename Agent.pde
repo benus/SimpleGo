@@ -20,9 +20,10 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
   boolean warning;
   String  warnInfo = "";
   
-  public Agent(Arena arena,String name) {
+  public Agent(Arena arena,String name,Node home) {
     super(arena,name);
     size = arena.cellSize/2;
+    this.home = home;
     //for debug if(name.equals("Agent_0")) status = STATUS_INFECTED;
   }
   

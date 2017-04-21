@@ -16,10 +16,6 @@ public class AbstractArena<A extends AbstractAgent,C extends AbstractCell> {
   void setCell(int i,int j,C cell) {
     cells[i][j] = cell;
   }
-	
-	public void addAgent(A agent) {
-    addAgent(agent,getRandomBlankCell());
-	}
 
   public void addAgent(A agent,C cell) {
     agents.add(agent);

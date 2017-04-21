@@ -183,8 +183,8 @@ public class Arena extends AbstractArena<Agent,Arena.Cell> {
     }*/
   }
   
-  public void addAgent(Agent agent,Cell cell) {
-    super.addAgent(agent,cell);
+  public void addAgent(Agent agent) {
+    super.addAgent(agent,agent.home.centerCell);
     agent.previousCell = agent.cell;
   }
   

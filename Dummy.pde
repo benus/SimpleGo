@@ -5,8 +5,8 @@ public class Dummy extends Agent {
   
   private Controller controller;
  
-  public Dummy(Arena arena,String name) {
-    super(arena,name);
+  public Dummy(Arena arena,String name,Node node) {
+    super(arena,name,node);
   }
   
   public void setController(Controller controller) {

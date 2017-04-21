@@ -189,7 +189,7 @@ NetConnector.init = function() {
 			userProfiles[info.peerId].userName = info.userName;
 			writeToMsgArea("User " + info.userName + "login");
 			console.log("User " + info.userName + " login");
-			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName);
+			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName,info.homeIndex);
 		}
 	});
 	this.socket.on("logout",function(info) {
@@ -208,13 +208,15 @@ NetConnector.init = function() {
 			
 			//preset user profiles
 			var userName;
+			var homeIndex;
 			for(var key in info.peerIdList) {
 				if(info.peerIdList[key] != self.peerId) {
 					userProfiles[info.peerIdList[key]] = {};
-					userName = info.loginedUserNameList[info.peerIdList[key]];
-					if(userName) {
+					userName = info.loginedUserNameList[info.peerIdList[key]].userName;
+					homeIndex = info.loginedUserNameList[info.peerIdList[key]].homeIndex;
+					if(userName && homeIndex) {
 						userProfiles[info.peerIdList[key]].userName = userName;
-						Processing.getInstanceById('SimpleGo').newRemoteAgent(userName);
+						Processing.getInstanceById('SimpleGo').newRemoteAgent(userName,homeIndex);
 					}
 				}
 			}
@@ -268,9 +270,9 @@ NetConnector.close = function() {
 	}
 };
 
-NetConnector.login = function(userName) {
+NetConnector.login = function(userName,homeNodeIndex) {
 	if(NetConnector.socket) {	
-		NetConnector.socket.emit("login",{peerId:self.peerId,userName:userName});
+		NetConnector.socket.emit("login",{peerId:self.peerId,userName:userName,homeIndex:{x:homeNodeIndex.x,y:homeNodeIndex.y}});
 	}
 };
 

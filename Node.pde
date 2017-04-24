@@ -13,22 +13,12 @@ public class Node {
   }
   
   void instantiateCells(PVector index) {
-    this.centerCell = instantiateCell(index);
-    this.leftCell = instantiateCell(new PVector(index.x-1,index.y));
-    this.topCell = instantiateCell(new PVector(index.x,index.y-1));
-    this.rightCell = instantiateCell(new PVector(index.x+1,index.y));
-    this.bottomCell = instantiateCell(new PVector(index.x,index.y+1));
-  }
-  
-  Arena.Cell instantiateCell(PVector index) {
-    Arena.Cell cell = matrix.arena.cells[int(index.x)][int(index.y)]; //<>//
-    if(cell == null) {
-      PVector cellPos = new PVector(index.x*matrix.arena.cellSize + matrix.arena.halfCellSize.x,index.y*matrix.arena.cellSize + matrix.arena.halfCellSize.y);
-      cell = matrix.arena.new Cell(new PVector(index.x,index.y),cellPos,matrix.arena.cellSize);//appears it does not supported by processingjs(matrix.arena.new Cell)
-      matrix.arena.setCell(int(index.x),int(index.y),cell);
-    }
-    return cell;
-  }
+    this.centerCell = matrix.arena.instantiateCell(index);
+    this.leftCell = matrix.arena.instantiateCell(new PVector(index.x-1,index.y));
+    this.topCell = matrix.arena.instantiateCell(new PVector(index.x,index.y-1));
+    this.rightCell = matrix.arena.instantiateCell(new PVector(index.x+1,index.y));
+    this.bottomCell = matrix.arena.instantiateCell(new PVector(index.x,index.y+1));
+  } //<>//
   
   void drawCross() {
     stroke(LineColor,progressToActive-150);

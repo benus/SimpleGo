@@ -80,7 +80,7 @@ public class AbstractArena<A extends AbstractAgent,C extends AbstractCell> {
 			int x = (int)(Math.random() * WIDTH);
 			int y = (int)(Math.random() * HEIGHT);
 			cell = getCell(x,y);
-			if(cell.isBlank()) {
+			if(cell != null && cell.isBlank()) {
 				found = true;
 			}
 		}while(!found);

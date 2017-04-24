@@ -72,7 +72,7 @@ public class Matrix {
       }
     }while(again && tryNum < 20);
     if(!again) {
-      println("new node in (" + index.x + "," + index.y + ")");
+      println("new node on (" + index.x + "," + index.y + ")");
       nodeMap.put(index,new Node(this,index));
       return nodeMap.get(index);
     }

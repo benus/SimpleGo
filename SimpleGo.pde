@@ -15,7 +15,7 @@ void setup() {
   
   net.init();
     
-  /*matrix = new Matrix();
+  matrix = new Matrix();
   Node node = null;
   for(int i=0;i<AUTO_AGENT_NUM;i++) {
     node = matrix.newNode();
@@ -32,7 +32,7 @@ void setup() {
   
   agents = matrix.arena.agents;
   
-  net.login(dummy);*/
+  net.login(dummy);
 }
 
 void keyPressed() {

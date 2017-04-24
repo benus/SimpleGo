@@ -13,7 +13,7 @@ public class NetFlat {
   private HashMap<String,Integer> latencyMap = new HashMap<String,Integer>();//peerId,latency
   
   public void init() {
-    //NetConnector.init();
+    NetConnector.init();
   }
   
   public void login(Dummy dummy) {

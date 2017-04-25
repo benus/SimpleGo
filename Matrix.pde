@@ -47,7 +47,7 @@ public class Matrix {
     }
     
     if(neighbourIndex != null) {
-      println("neighbour node in (" + neighbourIndex.x + "," + neighbourIndex.y + ")");
+      println("neighbour node on (" + neighbourIndex.x + "," + neighbourIndex.y + ")");
       nodeMap.put(neighbourIndex,new Node(this,neighbourIndex));
       return nodeMap.get(neighbourIndex);
     }

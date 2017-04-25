@@ -16,12 +16,9 @@ void setup() {
   net.init();
     
   matrix = new Matrix();
+  
+  //init local agents
   Node node = null;
-  for(int i=0;i<AUTO_AGENT_NUM;i++) {
-    node = matrix.newNode();
-    Agent agent= new Agent(matrix.arena,"Agent_" + i + "_" + net.getPeerId(),node);
-    matrix.addAgent(agent);
-  }
   node = matrix.newNode();
   Dummy dummy = new Dummy(matrix.arena,"Dummy_" + net.getPeerId(),node);
   dummy.setController(controller);
@@ -29,6 +26,13 @@ void setup() {
   matrix.addAgent(dummy);
   //dummy.cell = arena.cells[3][3];//for test
   matrix.arena.initViewport(dummy.cell.position);
+  
+  for(int i=0;i<AUTO_AGENT_NUM;i++) {
+    node = matrix.newNode();
+    Agent agent= new Agent(matrix.arena,"Robot" + i + "_" + net.getPeerId(),node);
+    matrix.addAgent(agent);
+    net.login(agent);
+  }
   
   agents = matrix.arena.agents;
   

@@ -186,10 +186,16 @@ NetConnector.init = function() {
 	});
 	this.socket.on("login",function(info) {
 		if(info.peerId != self.peerId) {
-			userProfiles[info.peerId].userName = info.userName;
-			writeToMsgArea("User " + info.userName + "login");
-			console.log("User " + info.userName + " login");
-			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName,info.homeIndex);
+			if(info.userName.substring(0,5) == 'Robot') {
+				userProfiles[info.peerId][info.userName] = {homeIndex:info.homeIndex};
+			}
+			else {
+				userProfiles[info.peerId].userName = info.userName;
+				userProfiles[info.peerId].homeIndex = info.homeIndex;
+				writeToMsgArea("User " + info.userName + "login");
+				console.log("User " + info.userName + " login");
+			}
+			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName + '_' + info.peerId,info.homeIndex);
 		}
 	});
 	this.socket.on("logout",function(info) {
@@ -217,6 +223,11 @@ NetConnector.init = function() {
 					if(userName && homeIndex) {
 						userProfiles[info.peerIdList[key]].userName = userName;
 						Processing.getInstanceById('SimpleGo').newRemoteAgent(userName,homeIndex);
+					}
+					for(var name in info.loginedUserNameList[info.peerIdList[key]]) {
+						if(name.substring(0,5) == 'Robot') {
+							Processing.getInstanceById('SimpleGo').newRemoteAgent(name + '_' + key,info.loginedUserNameList[info.peerIdList[key]][name].homeIndex);
+						}
 					}
 				}
 			}

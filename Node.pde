@@ -7,7 +7,7 @@ public class Node {
   Arena.Cell centerCell,leftCell,topCell,rightCell,bottomCell; //each node looks like a cross with five invisible Cell objects
   int LineColor = 200;
   
-  public Node(Matrix matrix,PVector index) {
+  public Node(Matrix matrix,PVector index) {//println("created a node: " + index.x + "," + index.y);
     this.matrix = matrix;
     instantiateCells(index);
   }

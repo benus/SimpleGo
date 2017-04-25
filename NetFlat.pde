@@ -16,8 +16,8 @@ public class NetFlat {
     NetConnector.init();
   }
   
-  public void login(Dummy dummy) {
-    NetConnector.login(dummy.name,dummy.home.centerCell.index);
+  public void login(Agent agent) {
+    NetConnector.login(agent.name,agent.home.centerCell.index);
   }
   
   public String getPeerId() {

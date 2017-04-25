@@ -37,6 +37,11 @@ io.on("connection",function(socket) {
 			if(userProfiles[peerId].userName) {
 				loginedUserNameList[peerId] = {userName:userProfiles[peerId].userName,homeIndex:userProfiles[peerId].homeIndex};
 			}
+			for(var name in userProfiles[peerId]) {
+				if(name.substring(0,5) == 'Robot') {
+					loginedUserNameList[peerId][name] = {homeIndex:userProfiles[peerId][name].homeIndex};
+				}
+			}
 		}
 		socket.emit("env",{peerIdList:Object.keys(userProfiles),loginedUserNameList:loginedUserNameList});
 		userProfiles[info.peerId] = {socket:socket};
@@ -59,10 +64,15 @@ io.on("connection",function(socket) {
 	});
 	
 	socket.on("login",function(info) {
-		userProfiles[info.peerId].userName = info.userName;
-		userProfiles[info.peerId].homeIndex = info.homeIndex;
-		console.log("User " + info.userName + " login");
-		
+		if(info.userName.substring(0,5) == 'Robot') {
+			userProfiles[info.peerId][info.userName.substring(0,info.userName.indexOf('_'))] = {homeIndex:info.homeIndex};
+			console.log("Robot " + info.userName + " login");
+		}
+		else {
+			userProfiles[info.peerId].userName = info.userName;
+			userProfiles[info.peerId].homeIndex = info.homeIndex;
+			console.log("User " + info.userName + " login");
+		}
 		io.emit('login',{peerId:info.peerId,userName:info.userName,homeIndex:info.homeIndex});
 	});
 	

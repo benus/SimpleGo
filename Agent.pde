@@ -271,7 +271,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
       //println(name + " moving from " + fromV + " to " + toV + " at " + movingPos + " by " + frameInMovement);
       if(elapsedTimeOneStep >= (MILLIS_FOR_MOVE_SPEED - latency)) {// 0 means the movement is completed
           //stepsForMoving = 0;
-          moving = false;    println("moved: " + cell.index);
+          moving = false;    //println("moved: " + cell.index);
       }
     }
     else {//println(name + " staying");

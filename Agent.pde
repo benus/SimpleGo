@@ -142,10 +142,15 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     //println("move randomly ");
     int direction = 0;
     Arena.Cell neighborCell = null;
+    int attemptNum = 0;
     do {
+      attemptNum++;
       direction = ((int)(getPerlinNoise()*5)) + 1;
       neighborCell = arena.getNeighborCell(this.cell,direction);
-    }while(direction < 5 && (neighborCell == null || neighborCell.agent != null));
+    }while(attemptNum <= 10 && direction < 5 && (neighborCell == null || neighborCell.agent != null));
+    if(attemptNum > 10) {
+      direction = Movable.MOVEMENT_STAY;
+    }
     warnInfo = "move to " + direction;
     return direction;
   }

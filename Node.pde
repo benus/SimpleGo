@@ -58,6 +58,7 @@ public class Node {
     }
   }
   
+  //issue: how to find a blank neighbour node as maybe the others cells except the center cell of neighbour node is not blank??
   PVector getBlankNeighboursIndex() {
     for(int i= int(centerCell.index.x) - 2; i<=int(centerCell.index.x) + 2;i+=2) {
       for(int j= int(centerCell.index.y) - 2; j<=int(centerCell.index.y) + 2;j+=2) {

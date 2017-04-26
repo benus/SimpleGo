@@ -1,6 +1,6 @@
 public static final int FRAME_RATE = 60;
-public static final int MOVE_SPEED = 30;//FRAMES
-public static final int MILLIS_FOR_MOVE_SPEED = MOVE_SPEED/FRAME_RATE*1000;
+public static final float MOVE_SPEED = 30;//FRAMES
+public static final int MILLIS_FOR_MOVE_SPEED = int(MOVE_SPEED/FRAME_RATE*1000);
 public static final int ARENA_SIZE = 320;//PIXELS
 public static final PVector VIEWPORT_SIZE = new PVector(320,320);//PIXELS
 public static final int DIAGONAL_CELL_NUM = 10; //the num should be even

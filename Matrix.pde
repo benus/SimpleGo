@@ -34,13 +34,13 @@ public class Matrix {
   }
 
   //the neighbour node is added to matrix and return
-  Node newNeighbourNode() {println("ready to spawn neighbour node");
+  Node newNeighbourNode() {println("ready to new a neighbour node");
     Iterator<Node> nodes = nodeMap.values().iterator();
     Node node = null;
     PVector neighbourIndex = null;
     while(nodes.hasNext()) {
       node = nodes.next();
-      neighbourIndex = node.getBlankNeighboursIndex();println("find blank neighbour index=" + neighbourIndex);
+      neighbourIndex = node.getBlankNeighboursIndex();println("find a blank neighbour index=" + neighbourIndex);
       if(neighbourIndex != null) {
         break;
       }

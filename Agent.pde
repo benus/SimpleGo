@@ -88,7 +88,12 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     //return ((int)(getMotercarloRandom()*5)) + 1;
     //return Math.abs(int(Utility.getGaussianRandom()));
     if(type == Movable.TYPE_AUTO) {
-       return getDirectionToExpectCell();
+       int newCommand = getDirectionToExpectCell();
+       if(newCommand != instruction) {
+         net.synAgent(this,newCommand);
+         return newCommand;
+       }
+       return instruction;
     }
     else {
       NetFlat.SynData syn = net.getSynData(name);
@@ -262,7 +267,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
         elapsedTimeOneStep = MILLIS_FOR_MOVE_SPEED - latency;
         speedRatio = 1;
       }
-      moveV.mult(speedRatio);
+      moveV.mult(speedRatio);//println(name + ".speed: " + speedRatio);
       
       PVector movingPos = PVector.add(fromV,moveV);
   

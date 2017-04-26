@@ -50,32 +50,34 @@ function login() {
 NetConnector.newPeerConnectionAndOffer = function(userList) {
 	//var offers = {};
 	for(var key in userList) {
-		userProfiles[userList[key]] = {};
-		var pc = new RTCPeerConnection(cfg);
-		pc.remotePeerId = userList[key];console.log("new pc.remotePeerId="+pc.remotePeerId);
-		pc.onicecandidate = function(e){NetConnector.onicecandidate(e,userList[key],'offer')};
-		pc.onconnecting = NetConnector.handleOnPeerConnecting;
-		pc.onconnection = NetConnector.handleOnPeerConnection;
-	
-		pc.onsignalingstatechange = NetConnector.handleOnSignalingStateChange;
-		pc.oniceconnectionstatechange = function(e){NetConnector.handleOnIceConnectionStateChange(e,pc,userList[key])};
-		pc.onicegatheringstatechange = NetConnector.handleOnIceGatheringStateChange;
+		if(self.peerId != userList[key]) {
+			userProfiles[userList[key]] = {};
+			var pc = new RTCPeerConnection(cfg);
+			pc.remotePeerId = userList[key];console.log("new pc.remotePeerId="+pc.remotePeerId);
+			pc.onicecandidate = function(e){NetConnector.onicecandidate(e,userList[key],'offer')};
+			pc.onconnecting = NetConnector.handleOnPeerConnecting;
+			pc.onconnection = NetConnector.handleOnPeerConnection;
 		
-		NetConnector.createDataChannel(pc,userList[key]);
-		(function(pc,key){NetConnector.createOffer(pc,userList[key],{})})(pc,key);
-		
-		/*(function(pc,key){pc.createOffer({iceRestart:true}).then(function (desc) {
-			console.log("In offer, pc.remotePeerId=", pc.remotePeerId);
-			pc.setLocalDescription(desc);
-			console.log("Created local offer", desc);
-			writeToMsgArea("Created local offer");
-			//offers[userList[key]] = JSON.stringify({ "sdp": desc });
-			var offer = {};
-			offer[userList[key]] = JSON.stringify(desc);
-			NetConnector.socket.emit("offer",offer);
-		}, function () {console.warn("Couldn't create offer");writeToMsgArea("Couldn't create offer");})})(pc,key);*/
-		userProfiles[userList[key]].pc = pc;
-		console.log("Created peer connection to user(" + userList[key] + ")");
+			pc.onsignalingstatechange = NetConnector.handleOnSignalingStateChange;
+			pc.oniceconnectionstatechange = function(e){NetConnector.handleOnIceConnectionStateChange(e,pc,userList[key])};
+			pc.onicegatheringstatechange = NetConnector.handleOnIceGatheringStateChange;
+			
+			NetConnector.createDataChannel(pc,userList[key]);
+			(function(pc,key){NetConnector.createOffer(pc,userList[key],{})})(pc,key);
+			
+			/*(function(pc,key){pc.createOffer({iceRestart:true}).then(function (desc) {
+				console.log("In offer, pc.remotePeerId=", pc.remotePeerId);
+				pc.setLocalDescription(desc);
+				console.log("Created local offer", desc);
+				writeToMsgArea("Created local offer");
+				//offers[userList[key]] = JSON.stringify({ "sdp": desc });
+				var offer = {};
+				offer[userList[key]] = JSON.stringify(desc);
+				NetConnector.socket.emit("offer",offer);
+			}, function () {console.warn("Couldn't create offer");writeToMsgArea("Couldn't create offer");})})(pc,key);*/
+			userProfiles[userList[key]].pc = pc;
+			console.log("Created peer connection to user(" + userList[key] + ")");
+		}
 	}
 	//return offers;
 };
@@ -188,6 +190,8 @@ NetConnector.init = function() {
 		if(info.peerId != self.peerId) {
 			if(info.userName.substring(0,5) == 'Robot') {
 				userProfiles[info.peerId][info.userName] = {homeIndex:info.homeIndex};
+				writeToMsgArea("Robot " + info.userName + "login");
+				console.log("Robot " + info.userName + " login");
 			}
 			else {
 				userProfiles[info.peerId].userName = info.userName;
@@ -195,7 +199,7 @@ NetConnector.init = function() {
 				writeToMsgArea("User " + info.userName + "login");
 				console.log("User " + info.userName + " login");
 			}
-			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName + '_' + info.peerId,info.homeIndex);
+			Processing.getInstanceById('SimpleGo').newRemoteAgent(info.userName,info.homeIndex);//the userName including peerId
 		}
 	});
 	this.socket.on("logout",function(info) {
@@ -210,7 +214,7 @@ NetConnector.init = function() {
 		console.log("Get Env");
 		if(info.peerIdList && info.peerIdList.length > 0) {
 			console.log("Totally, " + info.peerIdList.length + " users are online");
-			writeToMsgArea("Online user list: " + info.peerIdList);
+			console.log("Online user list: " + info.peerIdList);
 			
 			//preset user profiles
 			var userName;
@@ -222,11 +226,13 @@ NetConnector.init = function() {
 					homeIndex = info.loginedUserNameList[info.peerIdList[key]].homeIndex;
 					if(userName && homeIndex) {
 						userProfiles[info.peerIdList[key]].userName = userName;
+						console.log("User " + userName + " existed");
 						Processing.getInstanceById('SimpleGo').newRemoteAgent(userName,homeIndex);
 					}
 					for(var name in info.loginedUserNameList[info.peerIdList[key]]) {
 						if(name.substring(0,5) == 'Robot') {
-							Processing.getInstanceById('SimpleGo').newRemoteAgent(name + '_' + key,info.loginedUserNameList[info.peerIdList[key]][name].homeIndex);
+							console.log("Robot " + name + " existed");
+							Processing.getInstanceById('SimpleGo').newRemoteAgent(name + '_' + info.peerIdList[key],info.loginedUserNameList[info.peerIdList[key]][name].homeIndex);
 						}
 					}
 				}
@@ -309,6 +315,7 @@ NetConnector.syn = function(data) {
 					var latency = Processing.getInstanceById('SimpleGo').getLatency(remotePeerId);
 					synData = JSON.stringify({syn:{latency:latency,timestamp:timestamp,objectName:data.objectName,movement:data.movement,cellIndex:{x:data.cellIndex.x,y:data.cellIndex.y,z:data.cellIndex.z}}});
 				}
+				//console.log("syn: " + synData);
 				userProfiles[remotePeerId].dc.send(synData);
 			}
 			else {
@@ -380,7 +387,7 @@ NetConnector.handleOnMessage = function(e,remotePeerId) {
 			var latency = new Date().getTime() - Number(data.syn.echo);
 			Processing.getInstanceById('SimpleGo').setLatency(remotePeerId,latency);
 		}
-		if(data.syn.objectName) {	console.log("Got a message",e.data);
+		if(data.syn.objectName) {	//console.log("Got a message: " + e.data);
 			Processing.getInstanceById('SimpleGo').setSynData(data.syn.objectName,data.syn);
 		}
 	}

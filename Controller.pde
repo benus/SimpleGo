@@ -20,7 +20,7 @@ public class Controller {
   **/
   public Integer getInstruction() {
     if(newCommand) {
-      println("start moving");
+      //println("start moving");
       net.synAgent(dummy,instruction);
       newCommand = false;
     }
@@ -49,11 +49,25 @@ public class Controller {
   
   void mousePressed() {
     newCommand = true;
-    if(mouseX < ARENA_SIZE / 2) {
+    if(mouseX < ARENA_SIZE / 3 &&
+       mouseY > ARENA_SIZE / 3 &&
+       mouseY < ARENA_SIZE / 3 * 2) {
       instruction = Movable.MOVEMENT_LEFT;
     }
-    else if(mouseX >= ARENA_SIZE / 2) {
+    else if(mouseX > ARENA_SIZE / 3 * 2 &&
+       mouseY > ARENA_SIZE / 3 &&
+       mouseY < ARENA_SIZE / 3 * 2) {
       instruction = Movable.MOVEMENT_RIGHT;
+    }
+    else if(mouseY < ARENA_SIZE / 3 &&
+       mouseX > ARENA_SIZE / 3 &&
+       mouseX < ARENA_SIZE / 3 * 2) {
+      instruction = Movable.MOVEMENT_UP;
+    }
+    else if(mouseY > ARENA_SIZE / 3 * 2 &&
+       mouseX > ARENA_SIZE / 3 &&
+       mouseX < ARENA_SIZE / 3 * 2) {
+      instruction = Movable.MOVEMENT_DOWN;
     }
   }
 }

@@ -245,6 +245,7 @@ NetConnector.init = function() {
 		else {
 			writeToMsgArea("I am the first one");
 		}
+		Processing.getInstanceById('SimpleGo').go();
 	});
 	this.socket.on("offer",function(info) {
 		if(userProfiles[info.peerId]) {

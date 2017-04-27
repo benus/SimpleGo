@@ -47,15 +47,33 @@ public class Node {
     if(!active) {
       progressToActive++;
       if(progressToActive >= 255) {
-        active = true;
+        activateNode();
       }
     }
     else if(active && destroyed) {
       progressToActive--;
       if(progressToActive <= 0) {
-        active = false;
+        inactivateNode();
       }
     }
+  }
+  
+  private void activateNode() {
+    active = true;
+    matrix.arena.installCell(this.centerCell);
+    matrix.arena.installCell(this.leftCell);
+    matrix.arena.installCell(this.topCell);
+    matrix.arena.installCell(this.rightCell);
+    matrix.arena.installCell(this.bottomCell);
+  }
+  
+  private void inactivateNode() {
+    active = false;
+    matrix.arena.uninstallCell(this.centerCell);
+    matrix.arena.uninstallCell(this.leftCell);
+    matrix.arena.uninstallCell(this.topCell);
+    matrix.arena.uninstallCell(this.rightCell);
+    matrix.arena.uninstallCell(this.bottomCell);
   }
   
   //issue: how to find a blank neighbour node as maybe the others cells except the center cell of neighbour node is not blank??
@@ -63,12 +81,12 @@ public class Node {
     for(int i= int(centerCell.index.x) - 2; i<=int(centerCell.index.x) + 2;i+=2) {
       for(int j= int(centerCell.index.y) - 2; j<=int(centerCell.index.y) + 2;j+=2) {
         if((i == centerCell.index.x && j == centerCell.index.y) ||
-           matrix.isOutOfBoundary(i,j)) {
+           matrix.arena.isOutOfBoundary(i,j)) {
           continue; //ignore itslef
         }
         else if(i == centerCell.index.x || j == centerCell.index.y) {println("checking neighour at " + i + "," + j);
           //the rule of left,top,right,bottom neighbours is x or y (only one) should be same as itslef's index
-          if(matrix.nodeMap.get(new PVector(i,j)) == null) {println("neighour is blank");
+          if(matrix.nodeMap.get(i+","+j) == null) {println("neighour is blank");
             return new PVector(i,j);
           }
         }

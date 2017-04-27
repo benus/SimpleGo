@@ -16,7 +16,10 @@ void setup() {
   net.init();
     
   matrix = new Matrix();
-  
+  agents = matrix.arena.agents;
+}
+
+void go() {
   //init local agents
   Node node = null;
   node = matrix.newNode();
@@ -33,8 +36,6 @@ void setup() {
     matrix.addAgent(agent);
     net.login(agent);
   }
-  
-  agents = matrix.arena.agents;
   
   net.login(dummy);
 }

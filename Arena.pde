@@ -183,17 +183,31 @@ public class Arena extends AbstractArena<Agent,Arena.Cell> {
     }*/
   }
   
-  Arena.Cell instantiateCell(PVector index) {
-    Arena.Cell cell = cells[int(index.x)][int(index.y)];
+  Cell instantiateCell(PVector index) {
+    if(isOutOfBoundary(int(index.x),int(index.y))) {
+         return null;
+    }
+    Cell cell = cells[int(index.x)][int(index.y)];
     if(cell == null) {
       PVector cellPos = new PVector(index.x*cellSize + halfCellSize.x,index.y*cellSize + halfCellSize.y);
       cell = new Cell(new PVector(index.x,index.y),cellPos,matrix.arena.cellSize);
-      setCell(int(index.x),int(index.y),cell);
     }
     return cell;
   }
   
-  public void addAgent(Agent agent) {println("add agent: " + agent.home);
+  void installCell(Cell cell) {
+    if(cell != null && cells[int(cell.index.x)][int(cell.index.y)] == null) {
+      setCell(int(cell.index.x),int(cell.index.y),cell);
+    }
+  }
+  
+  void uninstallCell(Cell cell) {
+    if(cell != null && cells[int(cell.index.x)][int(cell.index.y)] != null) {
+      cells[int(cell.index.x)][int(cell.index.y)] = null;
+    }
+  }
+  
+  public void addAgent(Agent agent) {println("add agent at " + agent.home.centerCell.index.x + "," + agent.home.centerCell.index.y);
     super.addAgent(agent,agent.home.centerCell);
     agent.previousCell = agent.cell;
   }
@@ -215,5 +229,13 @@ public class Arena extends AbstractArena<Agent,Arena.Cell> {
     
     viewport.updatePosition();
     viewport.draw();
+  }
+  
+    
+  boolean isOutOfBoundary(int x,int y) {
+    if(x<0 || y<0 || x > DIAGONAL_CELL_NUM-1 || y > DIAGONAL_CELL_NUM-1) {
+      return true;
+    }
+    return false;
   }
 }

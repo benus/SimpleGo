@@ -10,6 +10,10 @@ public static class Utility {
     return frameCount % FRAME_RATE == 0;
   }
   
+  public static String toString(PVector index) {
+    return index.x + "," + index.y;
+  }
+  
   //randomGaussian() supported by processing.js
   //public static float getGaussianRandom() {
   //  return (float)generator.nextGaussian();

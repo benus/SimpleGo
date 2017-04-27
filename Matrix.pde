@@ -1,5 +1,5 @@
 public class Matrix {
-  HashMap<PVector,Node> nodeMap = new HashMap<PVector,Node>();
+  HashMap<String,Node> nodeMap = new HashMap<String,Node>();
   Arena arena;
   
   public Matrix() {
@@ -8,7 +8,8 @@ public class Matrix {
   
   public void addAgent(Agent agent) {
     arena.addAgent(agent);
-    nodeMap.put(agent.home.centerCell.index,agent.home);
+    nodeMap.put(Utility.toString(agent.home.centerCell.index),agent.home);
+    println("NodeMap new node at " + Utility.toString(agent.home.centerCell.index));
   }
   
   public void draw() {
@@ -48,8 +49,8 @@ public class Matrix {
     
     if(neighbourIndex != null) {
       println("neighbour node on (" + neighbourIndex.x + "," + neighbourIndex.y + ")");
-      nodeMap.put(neighbourIndex,new Node(this,neighbourIndex));
-      return nodeMap.get(neighbourIndex);
+      nodeMap.put(Utility.toString(neighbourIndex),new Node(this,neighbourIndex));
+      return nodeMap.get(Utility.toString(neighbourIndex));
     }
     return null;
   }
@@ -73,8 +74,8 @@ public class Matrix {
     }while(again && tryNum < 20);
     if(!again) {
       println("new node on (" + index.x + "," + index.y + ")");
-      nodeMap.put(index,new Node(this,index));
-      return nodeMap.get(index);
+      nodeMap.put(Utility.toString(index),new Node(this,index));
+      return nodeMap.get(Utility.toString(index));
     }
     return null;
   }
@@ -88,12 +89,5 @@ public class Matrix {
         node.destroyed = true;
       }
     }
-  }
-  
-  boolean isOutOfBoundary(int x,int y) {
-    if(x<0 || y<0 || x > DIAGONAL_CELL_NUM-1 || y > DIAGONAL_CELL_NUM-1) {
-      return true;
-    }
-    return false;
   }
 }

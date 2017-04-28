@@ -97,7 +97,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     }
     else {
       NetFlat.SynData syn = net.getSynData(name);
-      if(syn != null) {
+      if(syn != null && home.active) {
         this.cell = arena.cells[int(syn.cellIndex.x)][int(syn.cellIndex.y)];
         this.latency = net.getLatency(name.substring(name.lastIndexOf("_") + 1));
         println("syned cell index: " + syn.cellIndex.x + "," + syn.cellIndex.y);

@@ -4,7 +4,7 @@ public class Node {
   int progressToActive;// node is fading in/out gradually. (0,255)  255 refers to active
   
   Matrix matrix;
-  Arena.Cell centerCell,leftCell,topCell,rightCell,bottomCell; //each node looks like a cross with five invisible Cell objects
+  Arena.Cell centerCell,leftCell,topCell,rightCell,bottomCell,topLeftCell,topRightCell,bottomLeftCell,bottomRightCell; //each node looks like a cross with five invisible Cell objects
   int LineColor = 200;
   
   public Node(Matrix matrix,PVector index) {//println("created a node: " + index.x + "," + index.y);
@@ -18,7 +18,29 @@ public class Node {
     this.topCell = matrix.arena.instantiateCell(new PVector(index.x,index.y-1));
     this.rightCell = matrix.arena.instantiateCell(new PVector(index.x+1,index.y));
     this.bottomCell = matrix.arena.instantiateCell(new PVector(index.x,index.y+1));
+    this.topLeftCell = matrix.arena.instantiateCell(new PVector(index.x-1,index.y-1));
+    this.topRightCell = matrix.arena.instantiateCell(new PVector(index.x+1,index.y-1));
+    this.bottomLeftCell = matrix.arena.instantiateCell(new PVector(index.x-1,index.y+1));
+    this.bottomRightCell = matrix.arena.instantiateCell(new PVector(index.x+1,index.y+1));
   } //<>//
+  
+  void drawRectangle() {
+    stroke(LineColor,progressToActive-150);
+    line(-matrix.arena.cellSize,-matrix.arena.cellSize-1,matrix.arena.cellSize,-matrix.arena.cellSize-1);
+    line(-matrix.arena.cellSize,matrix.arena.cellSize-1,matrix.arena.cellSize,matrix.arena.cellSize-1);
+    line(-matrix.arena.cellSize-1,-matrix.arena.cellSize,-matrix.arena.cellSize-1,matrix.arena.cellSize);
+    line(matrix.arena.cellSize-1,-matrix.arena.cellSize,matrix.arena.cellSize-1,matrix.arena.cellSize);
+    stroke(LineColor,progressToActive);
+    line(-matrix.arena.cellSize,-matrix.arena.cellSize,matrix.arena.cellSize,-matrix.arena.cellSize);
+    line(-matrix.arena.cellSize,matrix.arena.cellSize,matrix.arena.cellSize,matrix.arena.cellSize);
+    line(-matrix.arena.cellSize,-matrix.arena.cellSize,-matrix.arena.cellSize,matrix.arena.cellSize);
+    line(matrix.arena.cellSize,-matrix.arena.cellSize,matrix.arena.cellSize,matrix.arena.cellSize);
+    stroke(LineColor,progressToActive-150);
+    line(-matrix.arena.cellSize,-matrix.arena.cellSize+1,matrix.arena.cellSize,-matrix.arena.cellSize+1);
+    line(-matrix.arena.cellSize,matrix.arena.cellSize+1,matrix.arena.cellSize,matrix.arena.cellSize+1);
+    line(-matrix.arena.cellSize+1,-matrix.arena.cellSize,-matrix.arena.cellSize+1,matrix.arena.cellSize);
+    line(matrix.arena.cellSize+1,-matrix.arena.cellSize,matrix.arena.cellSize+1,matrix.arena.cellSize);
+  }
   
   void drawCross() {
     stroke(LineColor,progressToActive-150);
@@ -36,6 +58,7 @@ public class Node {
     pushMatrix();
     translate(centerCell.position.x,centerCell.position.y);
     drawCross();
+    drawRectangle();
     //stroke(255,progressToActive);
     //line(0,nodeAxisLength/2,nodeAxisLength,nodeAxisLength/2);
     //line(nodeAxisLength/2,0,nodeAxisLength/2,nodeAxisLength);
@@ -65,6 +88,10 @@ public class Node {
     matrix.arena.installCell(this.topCell);
     matrix.arena.installCell(this.rightCell);
     matrix.arena.installCell(this.bottomCell);
+    matrix.arena.installCell(this.topLeftCell);
+    matrix.arena.installCell(this.topRightCell);
+    matrix.arena.installCell(this.bottomLeftCell);
+    matrix.arena.installCell(this.bottomRightCell);
   }
   
   private void inactivateNode() {
@@ -74,6 +101,10 @@ public class Node {
     matrix.arena.uninstallCell(this.topCell);
     matrix.arena.uninstallCell(this.rightCell);
     matrix.arena.uninstallCell(this.bottomCell);
+    matrix.arena.uninstallCell(this.topLeftCell);
+    matrix.arena.uninstallCell(this.topRightCell);
+    matrix.arena.uninstallCell(this.bottomLeftCell);
+    matrix.arena.uninstallCell(this.bottomRightCell);
   }
   
   //issue: how to find a blank neighbour node as maybe the others cells except the center cell of neighbour node is not blank??

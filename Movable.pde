@@ -13,5 +13,5 @@ public interface Movable {
   public final static int TYPE_LOCAL = 2;
   public final static int TYPE_REMOTE = 3;
 	
-	public void move(int direction);
+	public boolean move(int direction);
 }

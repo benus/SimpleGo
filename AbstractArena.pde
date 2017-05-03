@@ -29,15 +29,12 @@ public class AbstractArena<A extends AbstractAgent,C extends AbstractCell> {
 	
 	public boolean enterCell(A agent,C cell) {
     if(cell.agent == null) {
-			cell.agent = agent;
-			//clear previous cell
-			if(agent.cell != null) {
-				agent.cell.agent = null;
-			}
-			agent.cell = cell;
+			cell.setAgent(agent);
       return true;
 			//println(agent.name + " is on new cell (" + cell.location.x + "," + cell.location.y + ")");
 		}
+    //println("cell(" + cell.index.x + "," + cell.index.y + ") is used by agent(" + cell.agent.name);
+    //println(agent.name + " is now in (" + cell.agent.cell.index.x + "," + cell.agent.cell.index.y + ")");
     return false;
 	}
 	

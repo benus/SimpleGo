@@ -70,8 +70,20 @@ void draw() {
     //checkInput();
     matrix.draw();
     agentsWork();
+    //showUsedCells();
   //moveAgents();
   }
+}
+
+//this function is used to bug checking
+void showUsedCells() {
+   for(int i=0;i<matrix.arena.WIDTH;i++) {
+      for(int j=0;j<matrix.arena.HEIGHT;j++) {
+        if(matrix.arena.cells[i][j]!=null && matrix.arena.cells[i][j].agent != null) {
+          matrix.arena.cells[i][j].wink();
+        }
+      }
+    }
 }
 
 void newRemoteAgent(String agentName,PVector homeNodeIndex) {

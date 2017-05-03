@@ -14,12 +14,19 @@ public class AbstractAgent<A extends AbstractArena,C extends AbstractCell> imple
 		this.name = name;
 	}
 	
-	public void move(int direction) {
-		//println(name + " moves " + (direction==1?"up":direction==2?"down":direction==3?"left":"right") + " to cell(" + cell.index.x + "," +  cell.index.y + ")");
+	public boolean move(int direction) {
 		C newCell = (C)arena.getNeighborCell(cell, direction);
-		if(newCell != null) {
-			arena.enterCell(this, newCell);
+    
+    /* for debug
+    if(!name.startsWith("Robot")){
+      println(name + " moves " + (direction==1?"up":direction==2?"down":direction==3?"left":"right") + " to cell(" + (newCell==null?"null":(cell.index.x + "," +  cell.index.y)) + ")");
+    }
+    */
+    		
+    if(newCell != null) {
+			return arena.enterCell(this, newCell);
 		}
+    return false;
 	}
 
 	public boolean isContained() {

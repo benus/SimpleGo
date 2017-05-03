@@ -57,15 +57,15 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     //println(probability);
     
     if(status == LifeCircle.STATUS_HEALTHY &&
-      probability < 2) {println(name + " incubated");
+      probability < 2) {//println(name + " incubated");
         status = LifeCircle.STATUS_INCUBATED;
     }
     else if(status == LifeCircle.STATUS_INCUBATED &&
-       probability < 10) {println(name + " infected");
+       probability < 10) {//println(name + " infected");
        status = LifeCircle.STATUS_INFECTED;
     }
     else if(status == LifeCircle.STATUS_INFECTED &&
-       probability < 1) {println(name + " recovered");
+       probability < 1) {//println(name + " recovered");
        status = LifeCircle.STATUS_HEALTHY;
     }
     
@@ -98,9 +98,10 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     else {
       NetFlat.SynData syn = net.getSynData(name);
       if(syn != null && home.active) {
-        this.cell = arena.cells[int(syn.cellIndex.x)][int(syn.cellIndex.y)];
+        //keep consistency of position
+        arena.enterCell(this,arena.cells[int(syn.cellIndex.x)][int(syn.cellIndex.y)]);
         this.latency = net.getLatency(name.substring(name.lastIndexOf("_") + 1));
-        println("syned cell index: " + syn.cellIndex.x + "," + syn.cellIndex.y);
+        //println("syned cell index: " + syn.cellIndex.x + "," + syn.cellIndex.y);
         net.setSynData(name,null);
         return syn.movement;
       }
@@ -226,11 +227,12 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     }
   }
   
-  public void move(int instruction) {
+  public boolean move(int instruction) {
     previousCell = this.cell;
-    super.move(instruction);
+    boolean success = super.move(instruction);
     moving = true;
     startTimeInStep = millis();
+    return success;
   }
   
   float getPerlinNoise() {

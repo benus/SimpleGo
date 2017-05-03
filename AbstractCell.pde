@@ -12,9 +12,9 @@ public class AbstractCell<A extends AbstractAgent>{
         if(agent.cell != null) {
           //remove the link from the previous cell
           agent.cell.agent = null;
-          //make the agent link to this cell
-          agent.cell = this;
         }
+         //make the agent link to this cell
+         agent.cell = this;
       }
       
       public int getIndexX() {

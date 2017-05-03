@@ -24,7 +24,7 @@ public class Arena extends AbstractArena<Agent,Arena.Cell> {
     
     public void wink() {
       fill(WINK_COLOR);
-      ellipse(position.x,position.y,size/2,size/2);
+      rect(position.x,position.y,size/2,size/2);
     }
   }
   

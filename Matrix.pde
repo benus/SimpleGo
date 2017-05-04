@@ -80,14 +80,9 @@ public class Matrix {
     return null;
   }
   
-  void destoryNode() {
-    Iterator<Node> nodes = nodeMap.values().iterator();
-    Node node = null;
-    if(nodes.hasNext()) {
-      node = nodes.next();
-      if(node.active) {
-        node.destroyed = true;
-      }
+  void destoryNode(Node node) {
+    if(node.active) {
+      node.destroyed = true;
     }
   }
 }

@@ -28,6 +28,10 @@ public class AbstractArena<A extends AbstractAgent,C extends AbstractCell> {
 	}
 	
 	public boolean enterCell(A agent,C cell) {
+    if(cell == null) {
+      println(agent.name + " can not enter cell as the cell is null");
+      return false;
+    }
     if(cell.agent == null) {
 			cell.setAgent(agent);
       return true;

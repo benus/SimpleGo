@@ -20,6 +20,10 @@ public class NetFlat {
     NetConnector.login(agent.name,agent.home.centerCell.index);
   }
   
+  public void logout(Agent agent) {
+    NetConnector.logout(agent.name);
+  }
+  
   public String getPeerId() {
     return NetConnector.getPeerId();
   }

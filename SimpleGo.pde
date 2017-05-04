@@ -5,6 +5,7 @@ List<Agent> agents;
 boolean isPaused;
 Controller controller = new Controller(new PVector(),0,0);
 NetFlat net = new NetFlat();
+int robotNum;
 
 void setup() {
   size(320,320);
@@ -27,15 +28,14 @@ void go() {
   dummy.setController(controller);
   dummy.status = LifeCircle.STATUS_INFECTED;//for test
   matrix.addAgent(dummy);
-  //dummy.cell = arena.cells[3][3];//for test
   matrix.arena.initViewport(dummy.cell.position);
   
-  for(int i=0;i<AUTO_AGENT_NUM;i++) {
+  /*for(int i=0;i<AUTO_AGENT_NUM;i++) {
     node = matrix.newNode();
     Agent agent= new Agent(matrix.arena,"Robot" + i + "_" + net.getPeerId(),node);
     matrix.addAgent(agent);
     net.login(agent);
-  }
+  }*/
   
   net.login(dummy);
 }
@@ -70,6 +70,7 @@ void draw() {
     //checkInput();
     matrix.draw();
     agentsWork();
+    addOrRemoveRobotRandomly();
     //showUsedCells();
   //moveAgents();
   }
@@ -90,6 +91,18 @@ void newRemoteAgent(String agentName,PVector homeNodeIndex) {
   Agent agent= new Agent(matrix.arena,agentName,new Node(matrix,homeNodeIndex));
   agent.type = Movable.TYPE_REMOTE;
   matrix.addAgent(agent);
+}
+
+void destoryRemoteAgent(String agentName) {
+  Iterator<Agent> it = agents.iterator();
+  Agent agent = null;
+  for(;it.hasNext();) {
+    agent = it.next();
+    if(agent.name.equals(agentName)) {
+       matrix.destoryNode(agent.home);
+       it.remove();
+    }
+  }
 }
 
 void setSynData(String objectName,NetFlat.SynData data) { 
@@ -113,6 +126,46 @@ void agentsWork() {
   }
 }
 
+void addOrRemoveRobotRandomly() {
+    if(random(1) < 0.99) {
+      return;
+    }
+    boolean add = random(1) > 0.5;
+    int randomNum = int(random(3));
+    if(add && robotNum + randomNum > AUTO_AGENT_NUM) {
+      randomNum = AUTO_AGENT_NUM - robotNum;
+    }
+    else if(!add && robotNum - randomNum < 0) {
+      randomNum = robotNum;
+    }
+    Node node = null;
+    if(add) {
+      for(int i=0;i<randomNum;i++) {
+        node = matrix.newNode();
+        Agent agent= new Agent(matrix.arena,"Robot" + (robotNum + i + 1) + "_" + net.getPeerId(),node);
+        matrix.addAgent(agent);
+        net.login(agent);
+        robotNum++;
+      }
+    }
+    else {
+      Iterator<Agent> it = agents.iterator();
+      Agent agent = null;
+      int count = 0;
+      for(;it.hasNext();) {
+        agent = it.next();
+        count++;
+        if(count <= randomNum && agent.type == Movable.TYPE_AUTO) {
+          matrix.destoryNode(agent.home);
+          net.logout(agent);
+          it.remove();
+          robotNum--;
+        }
+      }
+    }
+}
+
+//depreciated
 void moveAgents() {
   for(Agent agent : agents) {
     agent.draw();

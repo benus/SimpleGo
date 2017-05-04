@@ -77,10 +77,17 @@ io.on("connection",function(socket) {
 	});
 	
 	socket.on("logout",function(info) {
-		if(userProfiles[socket.name]) {
-			console.log("User " + userProfiles[socket.name].userName + "logout");
-			io.emit("logout",{peerId:socket.name});
-			delete userProfiles[socket.name];
+		if(userProfiles[info.peerId]) {
+			if(info.userName.substring(0,5) == 'Robot') {
+				console.log("Robot " + info.userName + " logout");
+				delete userProfiles[info.peerId][info.userName.substring(0,info.userName.indexOf('_'))]
+			}
+			else {
+				console.log("User " + info.userName + " logout");
+				delete userProfiles[info.peerId];
+			}
+			io.emit("logout",{peerId:info.peerId,userName:info.userName});
+			
 		}
 	});
 	

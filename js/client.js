@@ -206,7 +206,13 @@ NetConnector.init = function() {
 		if(info.peerId != self.peerId) {
 			writeToMsgArea("User " + userProfiles[info.peerId].userName + "logout");
 			if(userProfiles[info.peerId]) {
-				delete userProfiles[info.peerId];
+				Processing.getInstanceById('SimpleGo').destoryRemoteAgent(info.userName);
+				if(info.userName.substring(0,5) == 'Robot') {
+					delete userProfiles[info.peerId][info.userName];
+				}
+				else {
+					delete userProfiles[info.peerId];
+				}
 			}
 		}
 	});
@@ -291,6 +297,12 @@ NetConnector.close = function() {
 NetConnector.login = function(userName,homeNodeIndex) {
 	if(NetConnector.socket) {	
 		NetConnector.socket.emit("login",{peerId:self.peerId,userName:userName,homeIndex:{x:homeNodeIndex.x,y:homeNodeIndex.y}});
+	}
+};
+
+NetConnector.logout = function(userName) {
+	if(NetConnector.socket) {	
+		NetConnector.socket.emit("logout",{peerId:self.peerId,userName:userName});
 	}
 };
 

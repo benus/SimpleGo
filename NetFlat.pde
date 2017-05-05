@@ -3,7 +3,7 @@ public class NetFlat {
   class SynData {
     public int synId;
     public String objectName;
-    public String status;
+    public int status;
     public PVector cellIndex;
     public int movement;
     public int latency;
@@ -61,6 +61,7 @@ public class NetFlat {
     data.objectName = agent.name;
     data.movement = instruction;
     data.cellIndex = agent.cell.index;
+    data.status = agent.status;
     NetConnector.syn(data);
   }
 }

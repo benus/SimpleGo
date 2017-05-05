@@ -47,7 +47,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
         neighbor = neighborCell.agent;
         if(this.status == LifeCircle.STATUS_HEALTHY && 
            (neighbor.getStatus() == LifeCircle.STATUS_INFECTED) && 
-           !neighbor.moving ) {
+           !neighbor.moving && random(1)>0.8) {
            this.status = LifeCircle.STATUS_INCUBATED;
        }
       }
@@ -100,6 +100,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
       if(syn != null && home.active) {
         //keep consistency of position
         arena.enterCell(this,arena.cells[int(syn.cellIndex.x)][int(syn.cellIndex.y)]);
+        this.status = syn.status;
         this.latency = net.getLatency(name.substring(name.lastIndexOf("_") + 1));
         //println("syned cell index: " + syn.cellIndex.x + "," + syn.cellIndex.y);
         net.setSynData(name,null);

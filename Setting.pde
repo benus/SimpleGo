@@ -4,7 +4,7 @@ public static final int MILLIS_FOR_MOVE_SPEED = int(MOVE_SPEED/FRAME_RATE*1000);
 public static final int ARENA_SIZE = 320;//PIXELS
 public static final PVector VIEWPORT_SIZE = new PVector(320,320);//PIXELS
 public static final int DIAGONAL_CELL_NUM = 10; //the num should be even
-public static final int AUTO_AGENT_NUM = 1;
+public static final int AUTO_AGENT_NUM = 2;
 public static final int DEFAULT_VISION = 5;
 
 public static final color OPACITY = 25;

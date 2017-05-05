@@ -26,9 +26,9 @@ void go() {
   node = matrix.newNode();
   Dummy dummy = new Dummy(matrix.arena,"Dummy_" + net.getPeerId(),node);
   dummy.setController(controller);
-  dummy.status = LifeCircle.STATUS_INFECTED;//for test
+  //dummy.status = LifeCircle.STATUS_INFECTED;//for test
+  matrix.arena.initViewport(dummy.home.centerCell.position);
   matrix.addAgent(dummy);
-  matrix.arena.initViewport(dummy.cell.position);
   
   /*for(int i=0;i<AUTO_AGENT_NUM;i++) {
     node = matrix.newNode();
@@ -143,12 +143,15 @@ void addOrRemoveRobotRandomly() {
       for(int i=0;i<randomNum;i++) {
         node = matrix.newNode();
         Agent agent= new Agent(matrix.arena,"Robot" + (robotNum + i + 1) + "_" + net.getPeerId(),node);
+        if(i == 0 && random(1) > 0.5) {//the first robot maybe infected in half probability
+          agent.status = LifeCircle.STATUS_INFECTED;
+        }
         matrix.addAgent(agent);
         net.login(agent);
         robotNum++;
       }
     }
-    else {
+    /*else {
       Iterator<Agent> it = agents.iterator();
       Agent agent = null;
       int count = 0;
@@ -162,7 +165,7 @@ void addOrRemoveRobotRandomly() {
           robotNum--;
         }
       }
-    }
+    }*/
 }
 
 //depreciated

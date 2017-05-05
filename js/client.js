@@ -326,7 +326,7 @@ NetConnector.syn = function(data) {
 				}
 				else {
 					var latency = Processing.getInstanceById('SimpleGo').getLatency(remotePeerId);
-					synData = JSON.stringify({syn:{latency:latency,timestamp:timestamp,objectName:data.objectName,movement:data.movement,cellIndex:{x:data.cellIndex.x,y:data.cellIndex.y,z:data.cellIndex.z}}});
+					synData = JSON.stringify({syn:{latency:latency,timestamp:timestamp,objectName:data.objectName,movement:data.movement,status:data.status,cellIndex:{x:data.cellIndex.x,y:data.cellIndex.y,z:data.cellIndex.z}}});
 				}
 				//console.log("syn: " + synData);
 				userProfiles[remotePeerId].dc.send(synData);

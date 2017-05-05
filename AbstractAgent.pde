@@ -43,7 +43,7 @@ public class AbstractAgent<A extends AbstractArena,C extends AbstractCell> imple
   }
 	
 	public String toString() {
-		return "name=" + name;
+		return "name:" + name;
 	}
 	
 	public Object call() throws Exception {

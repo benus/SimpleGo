@@ -18,6 +18,8 @@ void setup() {
     
   matrix = new Matrix();
   agents = matrix.arena.agents;
+  
+  //go();//for local processing running
 }
 
 void go() {
@@ -143,7 +145,7 @@ void addOrRemoveRobotRandomly() {
       for(int i=0;i<randomNum;i++) {
         node = matrix.newNode();
         Agent agent= new Agent(matrix.arena,"Robot" + (robotNum + i + 1) + "_" + net.getPeerId(),node);
-        if(i == 0 && random(1) > 0.5) {//the first robot maybe infected in half probability
+        if(i == 0 && random(1) > 0.1) {//the first robot maybe infected in half probability
           agent.status = LifeCircle.STATUS_INFECTED;
         }
         matrix.addAgent(agent);

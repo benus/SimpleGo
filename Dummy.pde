@@ -24,9 +24,12 @@ public class Dummy extends Agent {
     }
   }
   
-  public void move(int instruction) {
-    super.move(instruction);
-    arena.updateViewport(this.cell.position,instruction);
+  public boolean move(int instruction) {
+    boolean success = super.move(instruction);
+    if(success) {
+      arena.updateViewport(this.cell.position,instruction);
+    }
+    return success;
   }
   
   public void draw() {

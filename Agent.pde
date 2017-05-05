@@ -13,7 +13,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
   int type = Movable.TYPE_AUTO;
   int status = LifeCircle.STATUS_HEALTHY;
   int vision = DEFAULT_VISION;// + (int)(random(-3,3));
-  
+  String label;
   //the parameters for random movement in noise solution
   float tX = random(100);
   
@@ -47,7 +47,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
         neighbor = neighborCell.agent;
         if(this.status == LifeCircle.STATUS_HEALTHY && 
            (neighbor.getStatus() == LifeCircle.STATUS_INFECTED) && 
-           !neighbor.moving && random(1)>0.8) {
+           !neighbor.moving && random(1)>0.99) {
            this.status = LifeCircle.STATUS_INCUBATED;
        }
       }
@@ -57,7 +57,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     //println(probability);
     
     if(status == LifeCircle.STATUS_HEALTHY &&
-      probability < 2) {//println(name + " incubated");
+      probability < 1) {//println(name + " incubated");
         status = LifeCircle.STATUS_INCUBATED;
     }
     else if(status == LifeCircle.STATUS_INCUBATED &&
@@ -65,7 +65,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
        status = LifeCircle.STATUS_INFECTED;
     }
     else if(status == LifeCircle.STATUS_INFECTED &&
-       probability < 1) {//println(name + " recovered");
+       probability < 10) {//println(name + " recovered");
        status = LifeCircle.STATUS_HEALTHY;
     }
     
@@ -153,7 +153,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     if(attemptNum > 10) {
       direction = Movable.MOVEMENT_STAY;
     }
-    warnInfo = "move to " + direction;
+    //warnInfo = "move to " + direction;
     return direction;
   }
   
@@ -172,7 +172,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     for(Arena.Cell cell : cells) {     
       distance = arena.getDistanceSquare(this.cell,cell);
       if(chase) {
-        if(cell.agent.status == LifeCircle.STATUS_HEALTHY) {         
+        if(cell.agent.status != LifeCircle.STATUS_INFECTED) {         
           if(distance < betterDistance) {
             betterDistance = distance;
             targetCell = cell;
@@ -180,8 +180,7 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
         }
       }
       else {
-        if(cell.agent.status == LifeCircle.STATUS_INFECTED ||
-           cell.agent.status == LifeCircle.STATUS_INCUBATED) {
+        if(cell.agent.status == LifeCircle.STATUS_INFECTED) {
             if(distance > betterDistance) {
               betterDistance = distance;
               targetCell = cell;
@@ -192,8 +191,9 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     //println((chase?"chase":"escape") + " target cell is " + targetCell);
     if(targetCell != null) {
       warning = true;
+      warnInfo = (chase?"^u^ ":"V,V ") + targetCell.agent.name.split("_")[0];
       List<Arena.Cell> neighborcells = arena.getAdjacentCells(this.cell,1,true);
-      warnInfo = neighborcells.size() + " ";
+      //warnInfo += neighborcells.size() + " ";
       for(Arena.Cell neighborCell : neighborcells) {
         if(neighborCell.isBlank()) {
           distance = arena.getDistanceSquare(targetCell,neighborCell);//println("distance to target cell is " + distance + "," + betterDistance);
@@ -216,7 +216,6 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
       warning = false;
     }
     //println("expect cell is " + expectCell);
-    warnInfo += (expectCell == null?"null":(expectCell.getIndexX() + "," + expectCell.getIndexY()));
     return expectCell;
   }
   
@@ -257,10 +256,11 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     PVector posV = this.cell.position;
     //ellipse(posV.x,posV.y,size/2,size/2);
     //stroke(0);
-    text(warnInfo,posV.x,posV.y);
+    text(warnInfo,posV.x + 10,posV.y);
   }
   
   public void draw() {
+    this.label = (type == Movable.TYPE_AUTO?"M":type == Movable.TYPE_REMOTE?"R":"H");
     fill(AGENT_STATUS_COLORS[this.status]);
     if(moving) {//println(name + " latency: " + latency);
       elapsedTimeOneStep = int(millis() - startTimeInStep);
@@ -281,6 +281,8 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
   
       //println(toV.x,toV.y);
       ellipse(movingPos.x,movingPos.y,size,size);
+      fill(0);
+      text(label,movingPos.x,movingPos.y);
       //println(name + " moving from " + fromV + " to " + toV + " at " + movingPos + " by " + frameInMovement);
       if(elapsedTimeOneStep >= (MILLIS_FOR_MOVE_SPEED - latency)) {// 0 means the movement is completed
           //stepsForMoving = 0;
@@ -290,6 +292,8 @@ public class Agent extends AbstractAgent<Arena,Arena.Cell> implements LifeCircle
     else {//println(name + " staying");
       PVector posV = arena.getPositionInViewport(this.cell.position);
       ellipse(posV.x,posV.y,size,size);
+      fill(0);
+      text(label,posV.x,posV.y);
     }
   }
   

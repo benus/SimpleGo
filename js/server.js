@@ -2,6 +2,7 @@ var webApp = require("express")();
 var http = require("http");
 var server = http.Server(webApp);
 var io = require("socket.io")(http);
+var crypto = require("crypto");
 io.listen(server);
 var fs = require("fs");
 
@@ -17,12 +18,58 @@ webApp.get('/',function(req,res) {console.log("get request: " + req.url);
 });
 
 webApp.get('/*',function(req,res) {console.log("get path request: " + req.url);
+	/*
 	var url = req.url;
 	var path = url.substr(url.indexOf("/") + 1,url.length);
 	var file = fs.readFileSync(path);
+	res.writeHead(200, {
+        //'Access-Control-Allow-Origin': '*',
+        'ETag': "666666",
+        'Cache-Control': 'max-age=31536000, public'
+      });
 	res.write(file);
 	res.end();
+	*/
+	handleFile(req,res);
 });
+
+var getHash = function (str) {
+    var shasum = crypto.createHash('sha1');
+    return shasum.update(str).digest('base64');
+};
+
+var handleFile = function (req, res) {
+	var fileName = req.url.substr(req.url.indexOf("/") + 1,req.url.length);
+	fs.stat(fileName,function(err,stat){
+		var lastModified = stat.mtime.toUTCString();
+		var modifiedSince = req.headers['If-Modified-Since'];
+		if(modifiedSince && lastModified == modifiedSince) {
+			res.writeHead(304, "Not Modified");
+            res.end();
+		}
+		else {
+			fs.readFile(fileName, function(err, file) {
+				var hash = getHash(file);
+				var noneMatch = req.headers['if-none-match'];
+				if (noneMatch && hash === noneMatch) {
+					res.writeHead(304, "Not Modified");
+					res.end();
+				} else {
+				    //the ETag and Last-Modified are not working on Chrome for xhr type
+					res.setHeader("ETag", hash);
+					res.setHeader("Last-Modified",lastModified);//this header can not update the time in 'If-Modified-Since' of next request,why???
+					//res.setHeader("Cache-Control", "max-age=86400, public"); //this only works on firefox
+					//var expires = new Date();
+                    //expires.setTime(expires.getTime() + 24 * 60 * 60 * 1000); //expires in one day
+                    //res.setHeader("Expires", expires.toUTCString());
+					res.writeHead(200, "Ok");
+					res.end(file);
+				}
+			});
+		}
+	});
+    
+};
 				
 var userProfiles = {};
 
